@@ -25,6 +25,8 @@ services:
     ports:
       - 80:80
     networks: [domserver-network]
+    volumes:
+      - ./public:/opt/domjudge/domserver/webapp/public
     restart: unless-stopped
     depends_on:
       - db
