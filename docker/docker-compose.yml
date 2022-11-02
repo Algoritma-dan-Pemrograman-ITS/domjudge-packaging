@@ -27,7 +27,6 @@ services:
     networks: [domserver-network]
     volumes:
       - ./public:/opt/domjudge/domserver/webapp/public
-      - ./domserver/domjudge-inner:/etc/nginx/snippets/domjudge-inner
     restart: unless-stopped
     depends_on:
       - db
