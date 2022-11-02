@@ -40,7 +40,6 @@ services:
     networks: [domserver-network]
     environment:
       - DAEMON_ID=0
-      - DOMSERVER_BASEURL=http://domserver/
   judgehost_core1:
     container_name: judgehost_core1
     image: domjudge/judgehost:latest
@@ -53,7 +52,6 @@ services:
     networks: [domserver-network]
     environment:
       - DAEMON_ID=1
-      - DOMSERVER_BASEURL=http://domserver/
   judgehost_core2:
     container_name: judgehost_core2
     image: domjudge/judgehost:latest
@@ -66,7 +64,6 @@ services:
     networks: [domserver-network]
     environment:
       - DAEMON_ID=2
-      - DOMSERVER_BASEURL=http://domserver/
   judgehost_core3:
     container_name: judgehost_core3
     image: domjudge/judgehost:latest
@@ -79,7 +76,6 @@ services:
     networks: [domserver-network]
     environment:
       - DAEMON_ID=3
-      - DOMSERVER_BASEURL=http://domserver/
   judgehost_core4:
     container_name: judgehost_core4
     image: domjudge/judgehost:latest
@@ -92,7 +88,6 @@ services:
     networks: [domserver-network]
     environment:
       - DAEMON_ID=4
-      - DOMSERVER_BASEURL=http://domserver/
 
 networks:
   domserver-network:
