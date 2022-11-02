@@ -23,7 +23,7 @@ services:
     image: zydhanlinnar11/alpro-domjudge:main
     env_file: [.env]
     ports:
-      - 8080:80
+      - 80:80
     networks: [domserver-network]
     restart: unless-stopped
     depends_on:
@@ -54,6 +54,33 @@ services:
     environment:
       - DAEMON_ID=1
       - DOMSERVER_BASEURL=http://domserver/
+  judgehost_core2:
+    container_name: judgehost_core2
+    image: domjudge/judgehost:latest
+    env_file: [.env]
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    hostname: judgehost-alpro-main
+    restart: unless-stopped
+    networks: [domserver-network]
+    environment:
+      - DAEMON_ID=2
+      - DOMSERVER_BASEURL=http://domserver/
+  judgehost_core3:
+    container_name: judgehost_core3
+    image: domjudge/judgehost:latest
+    env_file: [.env]
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    hostname: judgehost-alpro-main
+    restart: unless-stopped
+    networks: [domserver-network]
+    environment:
+      - DAEMON_ID=3
+      - DOMSERVER_BASEURL=http://domserver/
 
 networks:
   domserver-network:
+    driver: bridge
