@@ -92,6 +92,55 @@ else
 	echo "TRUSTED_PROXIES=${DOCKER_GATEWAY_IP}" >> webapp/.env.local
 fi
 
+# Add openid connect configuration
+OPENID_PROVIDER=$(file_or_env OPENID_PROVIDER)
+OPENID_CLIENT_ID=$(file_or_env OPENID_CLIENT_ID)
+OPENID_CLIENT_SECRET=$(file_or_env OPENID_CLIENT_SECRET)
+OPENID_REDIRECT_URI=$(file_or_env OPENID_REDIRECT_URI)
+OPENID_POST_LOGOUT_REDIRECT_URI=$(file_or_env OPENID_POST_LOGOUT_REDIRECT_URI)
+OPENID_SCOPE=$(file_or_env OPENID_SCOPE)
+if grep -q OPENID_PROVIDER webapp/.env.local > /dev/null 2>&1
+then
+	sed -i "s|OPENID_PROVIDER=.*|OPENID_PROVIDER=${OPENID_PROVIDER}|" webapp/.env.local
+else
+	echo "OPENID_PROVIDER=${OPENID_PROVIDER}" >> webapp/.env.local
+fi
+
+if grep -q OPENID_CLIENT_ID webapp/.env.local > /dev/null 2>&1
+then
+	sed -i "s|OPENID_CLIENT_ID=.*|OPENID_CLIENT_ID=${OPENID_CLIENT_ID}|" webapp/.env.local
+else
+	echo "OPENID_CLIENT_ID=${OPENID_CLIENT_ID}" >> webapp/.env.local
+fi
+
+if grep -q OPENID_CLIENT_SECRET webapp/.env.local > /dev/null 2>&1
+then
+	sed -i "s|OPENID_CLIENT_SECRET=.*|OPENID_CLIENT_SECRET=${OPENID_CLIENT_SECRET}|" webapp/.env.local
+else
+	echo "OPENID_CLIENT_SECRET=${OPENID_CLIENT_SECRET}" >> webapp/.env.local
+fi
+
+if grep -q OPENID_REDIRECT_URI webapp/.env.local > /dev/null 2>&1
+then
+	sed -i "s|OPENID_REDIRECT_URI=.*|OPENID_REDIRECT_URI=${OPENID_REDIRECT_URI}|" webapp/.env.local
+else
+	echo "OPENID_REDIRECT_URI=${OPENID_REDIRECT_URI}" >> webapp/.env.local
+fi
+
+if grep -q OPENID_POST_LOGOUT_REDIRECT_URI webapp/.env.local > /dev/null 2>&1
+then
+	sed -i "s|OPENID_POST_LOGOUT_REDIRECT_URI=.*|OPENID_POST_LOGOUT_REDIRECT_URI=${OPENID_POST_LOGOUT_REDIRECT_URI}|" webapp/.env.local
+else
+	echo "OPENID_POST_LOGOUT_REDIRECT_URI=${OPENID_POST_LOGOUT_REDIRECT_URI}" >> webapp/.env.local
+fi
+
+if grep -q OPENID_SCOPE webapp/.env.local > /dev/null 2>&1
+then
+	sed -i "s|OPENID_SCOPE=.*|OPENID_SCOPE=${OPENID_SCOPE}|" webapp/.env.local
+else
+	echo "OPENID_SCOPE=${OPENID_SCOPE}" >> webapp/.env.local
+fi
+
 NGINX_CONFIG_FILE=/etc/nginx/snippets/domjudge-inner
 
 # Set up BaseURL
