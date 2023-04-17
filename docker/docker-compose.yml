@@ -8,29 +8,25 @@ services:
     restart: unless-stopped
     volumes:
       - ./database/:/var/lib/mysql/
-    command: --max-connections=1000 --max-allowed-packet=512M
-  phpmyadmin:
-    container_name: phpmyadmin
+    command: --max-connections=1000 --max-allowed-packet=512M --innodb_log_file_size=960MB
+  domjudge_phpmyadmin:
     image: phpmyadmin
     environment:
       - PMA_HOST=db
-    ports:
-      - 8081:80
-    networks: [domserver-network]
+      - PMA_ABSOLUTE_URI=https://www.its.ac.id/informatika/domjudge/db/
+    networks: [domserver-network, nginx-network]
     restart: unless-stopped
   domserver:
     container_name: domserver
-    image: zydhanlinnar11/alpro-domjudge:main
+    image: zydhanlinnar11/alpro-domjudge:8.2.0
     env_file: [.env]
-    ports:
-      - 80:80
-    networks: [domserver-network]
+    networks: [domserver-network, nginx-network]
     restart: unless-stopped
     depends_on:
       - db
   judgehost_core0:
     container_name: judgehost_core0
-    image: domjudge/judgehost:latest
+    image: domjudge/judgehost:8.2.0
     env_file: [.env]
     privileged: true
     volumes:
@@ -42,7 +38,7 @@ services:
       - DAEMON_ID=0
   judgehost_core1:
     container_name: judgehost_core1
-    image: domjudge/judgehost:latest
+    image: domjudge/judgehost:8.2.0
     env_file: [.env]
     privileged: true
     volumes:
@@ -54,7 +50,7 @@ services:
       - DAEMON_ID=1
   judgehost_core2:
     container_name: judgehost_core2
-    image: domjudge/judgehost:latest
+    image: domjudge/judgehost:8.2.0
     env_file: [.env]
     privileged: true
     volumes:
@@ -66,7 +62,7 @@ services:
       - DAEMON_ID=2
   judgehost_core3:
     container_name: judgehost_core3
-    image: domjudge/judgehost:latest
+    image: domjudge/judgehost:8.2.0
     env_file: [.env]
     privileged: true
     volumes:
@@ -78,7 +74,7 @@ services:
       - DAEMON_ID=3
   judgehost_core4:
     container_name: judgehost_core4
-    image: domjudge/judgehost:latest
+    image: domjudge/judgehost:8.2.0
     env_file: [.env]
     privileged: true
     volumes:
@@ -92,3 +88,5 @@ services:
 networks:
   domserver-network:
     driver: bridge
+  nginx-network:
+    external: true
