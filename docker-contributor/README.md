@@ -37,14 +37,21 @@ Next, if you are on Linux make sure you have cgroups enabled. See the [DOMjudge 
 Now you can run DOMjudge itself using the following command:
 
 ```bash
-docker run -v [path-to-domjudge-checkout]:/domjudge -v /sys/fs/cgroup:/sys/fs/cgroup:ro --link dj-mariadb:mariadb -it -e MYSQL_HOST=mariadb -e MYSQL_USER=domjudge -e MYSQL_DATABASE=domjudge -e MYSQL_PASSWORD=djpw -e MYSQL_ROOT_PASSWORD=rootpw -p 12345:80 --name domjudge --privileged domjudge/domjudge-contributor
+docker run -v [path-to-domjudge-checkout]:[path-to-domjudge-checkout] -v /sys/fs/cgroup:/sys/fs/cgroup:ro --link dj-mariadb:mariadb -it -e PROJECT_DIR=[path-to-domjudge-checkout] -p 12345:80 --name domjudge --privileged domjudge/domjudge-contributor
 ```
 
-Make sure you replace `[path-to-domjudge-checkout]` with the path to your local DOMjudge checkout. On recent macOS and Windows Docker builds, you should add `:cached` at the end of the `/domjudge` volume (i.e. `-v [path-to-domjudge-checkout]:/domjudge:cached`) to speed up the webserver a lot.
+Make sure you replace `[path-to-domjudge-checkout]` with the path to your local DOMjudge checkout. On recent macOS and Windows Docker builds, you should add `:cached` at the end of the volume (i.e. `-v [path-to-domjudge-checkout]:[path-to-domjudge-checkout]:cached`) to speed up the webserver a lot.
 
 The above command will start the container, set up DOMjudge for a maintainer install, set up the database and create a chroot to be used by the judgedaemons. It will then start nginx, PHP-FPM and two judgedaemons using supervisord.
 
 You can now access the web interface on [http://localhost:12345/](http://localhost:12345/). Use username `admin` and the password from `etc/initial_admin_password.secret` to log in. Note that for DOMjudge 6.0.0 and higher the webserver configuration will be set up such that the debug front controller will be used.
+
+Note that example data is not loaded, you need to do that yourself by running
+
+
+```bash
+bin/dj_setup_database install-examples
+```
 
 ### Environment variables
 
@@ -58,7 +65,6 @@ The following environment variables are supported by the container:
 * `MYSQL_DATABASE` (defaults to `domjudge`): set the database to use.
 * `FPM_MAX_CHILDREN` (defaults to `40`): the maximum number of PHP FPM children to spawn.
 * `DJ_SKIP_MAKE` (defaults to `0`): set to `1` to skip the maintainer setup and install commands. This will speed up the startup process of the container and is useful if this is already done before.
-* `DJ_DB_INSTALL_BARE` (defaults to `0`): set to `1` to do a `bare-install` for the database instead of a normal `install`.
 
 #### Passwords through files
 
@@ -122,7 +128,7 @@ Xdebug has the following settings:
 
 ### Accessing the judgings
 
-Because the chroot script copies some special devices into every chroot used for judging and Docker does not support having these special devices on volumes, a bind-mount is created for `/domjudge/output/judgings`. Thus, if you want to access the contents of this directory, use `docker exec -it domjudge bash` to get access into the container and go to that directory.
+Because the chroot script copies some special devices into every chroot used for judging and Docker does not support having these special devices on volumes, a bind-mount is created for `[path-to-domjudge-checkout]/output/judgings`. Thus, if you want to access the contents of this directory, use `docker exec -it domjudge bash` to get access into the container and go to that directory.
 
 ## Building the image
 
